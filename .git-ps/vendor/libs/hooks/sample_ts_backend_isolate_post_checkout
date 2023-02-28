@@ -33,13 +33,13 @@ uncommitted_files_count=$(get_uncommitted_files_count)
 exit_nonzero $? "failed to check for uncommitted changes" 15
 exit_nonzero $uncommitted_files_count "Uncommitted changes exist" 16
 
-echo "\n\nRunning npm tsc --noEmit..."
-time npx tsc --noEmit
-exit_nonzero $? "Command 'npx tsc --noEmit'" 20
+echo "\n\nRunning npm run build:noemit..."
+time npm run build:noemit
+exit_nonzero $? "Command 'npm run build:noemit'" 20
 
-echo "\n\nRunning npm run lint:dry..."
-time npm run lint:dry
-exit_nonzero $? "Command 'npm run lint:dry'" 30
+echo "\n\nRunning npm run lint..."
+time npm run lint
+exit_nonzero $? "Command 'npm run lint'" 30
 
 echo "\n\nRunning npm run build..."
 time npm run build
