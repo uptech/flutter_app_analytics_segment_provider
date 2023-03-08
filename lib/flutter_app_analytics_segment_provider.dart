@@ -3,26 +3,30 @@ library flutter_app_analytics_segment_provider;
 import 'package:flutter_app_analytics/flutter_app_analytics.dart';
 import 'package:flutter_segment/flutter_segment.dart';
 
+import 'segment_driver.dart';
+import 'segment_interface.dart';
+
+export 'segment_driver.dart';
+export 'segment_interface.dart';
+
 /// A Segment Provider for Flutter app analytics.
 class SegmentProvider implements AnalyticsProvider {
-  String _writeKey = '';
-  String? _userId;
+  final SegmentInterface _driver;
+  final String _writeKey;
 
   bool _initialized = false;
 
-  SegmentProvider({
-    required String writeKey,
-    String? userId,
-  }) {
-    _writeKey = writeKey;
-    _userId = userId;
-  }
+  SegmentProvider(
+      {required String writeKey,
+      SegmentInterface driver = const SegmentDriver()})
+      : _driver = driver,
+        _writeKey = writeKey;
 
-  initialize() async {
+  Future<void> initialize() async {
     if (_initialized) {
       return;
     }
-    await Segment.config(
+    await _driver.config(
       options: SegmentConfig(
         writeKey: _writeKey,
         trackApplicationLifecycleEvents: false,
@@ -39,19 +43,13 @@ class SegmentProvider implements AnalyticsProvider {
     Map<String, dynamic>? properties,
   }) async {
     initialize();
-    if (userId != null && properties != null) {
-      await Segment.identify(userId: _userId, traits: properties);
-    } else if (userId != null) {
-      await Segment.identify(userId: _userId);
-    } else if (properties != null) {
-      await Segment.identify(traits: properties);
-    }
+    await _driver.identify(userId: userId, traits: properties);
   }
 
   @override
   Future<void> trackEvent(AnalyticsEvent event) async {
     initialize();
-    await Segment.track(eventName: event.name, properties: event.properties);
+    await _driver.track(eventName: event.name, properties: event.properties);
   }
 
   @override
