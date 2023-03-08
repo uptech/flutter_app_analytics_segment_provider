@@ -5,14 +5,16 @@ import 'package:flutter_segment/flutter_segment.dart';
 
 /// A Segment Provider for Flutter app analytics.
 class SegmentProvider implements AnalyticsProvider {
-  final String _writeKey;
-  final String? _userId;
+  String _writeKey = '';
+  String? _userId;
 
-  SegmentProvider(
-    this._writeKey,
-    this._userId,
-  );
-
+  SegmentProvider({
+    required String writeKey,
+    String? userId,
+  }) {
+    _writeKey = writeKey;
+    _userId = userId;
+  }
   initialize() async {
     await Segment.config(
       options: SegmentConfig(
