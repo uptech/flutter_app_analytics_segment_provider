@@ -8,6 +8,8 @@ class SegmentProvider implements AnalyticsProvider {
   String _writeKey = '';
   String? _userId;
 
+  bool _initialized = false;
+
   SegmentProvider({
     required String writeKey,
     String? userId,
@@ -15,7 +17,11 @@ class SegmentProvider implements AnalyticsProvider {
     _writeKey = writeKey;
     _userId = userId;
   }
+
   initialize() async {
+    if (_initialized) {
+      return;
+    }
     await Segment.config(
       options: SegmentConfig(
         writeKey: _writeKey,
@@ -24,6 +30,7 @@ class SegmentProvider implements AnalyticsProvider {
         debug: false,
       ),
     );
+    _initialized = true;
   }
 
   @override
@@ -31,6 +38,7 @@ class SegmentProvider implements AnalyticsProvider {
     String? userId,
     Map<String, dynamic>? properties,
   }) async {
+    initialize();
     if (userId != null && properties != null) {
       await Segment.identify(userId: _userId, traits: properties);
     } else if (userId != null) {
@@ -42,11 +50,13 @@ class SegmentProvider implements AnalyticsProvider {
 
   @override
   Future<void> trackEvent(AnalyticsEvent event) async {
+    initialize();
     await Segment.track(eventName: event.name, properties: event.properties);
   }
 
   @override
   Future<void> trackEvents(List<AnalyticsEvent> events) async {
+    initialize();
     await Future.forEach<AnalyticsEvent>(events, (event) => trackEvent(event));
   }
 }
