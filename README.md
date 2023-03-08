@@ -6,6 +6,7 @@ Implements support for Segment into the [Flutter App Analytics](https://github.c
 
 ```dart
 SegmentProvider segment = SegmentProvider(writeKey: 'some_key');
+await segment.initialize();
 Analytics analytics = ...;
 analytics.providers = [segment];
 ```
