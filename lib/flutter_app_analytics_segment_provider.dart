@@ -11,6 +11,8 @@ export 'segment_interface.dart';
 
 /// A Segment Provider for Flutter app analytics.
 class SegmentProvider implements AnalyticsProvider {
+  @override
+  List<String> allowedUserProperties = [];
   final SegmentInterface _driver;
   final String _writeKey;
 
@@ -18,9 +20,11 @@ class SegmentProvider implements AnalyticsProvider {
 
   SegmentProvider(
       {required String writeKey,
-      SegmentInterface driver = const SegmentDriver()})
+      SegmentInterface driver = const SegmentDriver(),
+      List<String>? allowedProperties})
       : _driver = driver,
-        _writeKey = writeKey;
+        _writeKey = writeKey,
+        allowedUserProperties = allowedProperties ?? [];
 
   Future<void> initialize() async {
     if (_initialized) {
