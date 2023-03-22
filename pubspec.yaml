@@ -1,6 +1,6 @@
 name: flutter_app_analytics_segment_provider
 description: A new Segment provider for app analytics
-version: 0.0.1
+version: 0.1.0
 homepage:
 
 environment:
