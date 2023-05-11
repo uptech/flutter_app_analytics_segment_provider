@@ -1,5 +1,6 @@
 library flutter_app_analytics_segment_provider;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_app_analytics/flutter_app_analytics.dart';
 import 'package:flutter_segment/flutter_segment.dart';
 
@@ -28,6 +29,10 @@ class SegmentProvider implements AnalyticsProvider {
 
   Future<void> initialize() async {
     if (_initialized) {
+      return;
+    }
+    if (kIsWeb) {
+      _initialized = true;
       return;
     }
     await _driver.config(
